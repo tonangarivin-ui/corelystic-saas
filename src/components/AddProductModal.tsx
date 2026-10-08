@@ -23,14 +23,6 @@ export default function AddProductModal({ open, onClose }: Props) {
     return () => document.removeEventListener("keydown", handleEsc);
   }, [open, onClose]);
 
-  useEffect(() => {
-    if (open) {
-      setName("");
-      setPrice("");
-      setStock("");
-    }
-  }, [open]);
-
   if (!open) return null;
 
   return (

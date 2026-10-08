@@ -3,11 +3,8 @@ import { redirect } from "next/navigation";
 import { logoutAction } from "@/app/actions/auth";
 import {
   LayoutDashboard,
-  Package,
-  Store,
   LogOut,
   ExternalLink,
-  ShieldAlert,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";

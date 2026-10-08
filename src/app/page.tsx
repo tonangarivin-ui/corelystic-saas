@@ -6,9 +6,10 @@ import OrdersAnalyticsChart from "@/components/OrdersAnalyticsChart";
 import TopSalesPanel from "@/components/TopSalesPanel";
 import ProductsTable from "@/components/ProductsTable";
 import { prisma } from "@/lib/prisma";
+import type { Product } from "@prisma/client";
 
 export default async function Home() {
-  let initialProducts: any[] = [];
+  let initialProducts: Product[] = [];
   try {
     initialProducts = await prisma.product.findMany({
       orderBy: { createdAt: "desc" },

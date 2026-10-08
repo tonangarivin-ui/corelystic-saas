@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import AdminProductsTable from "@/components/admin/AdminProductsTable";
 import {
-  Database,
   DollarSign,
   PackageCheck,
   TrendingUp,
@@ -9,9 +8,8 @@ import {
 } from "lucide-react";
 
 export default async function AdminDashboardPage() {
-  const [products, orders, store] = await Promise.all([
+  const [products, store] = await Promise.all([
     prisma.product.findMany({ orderBy: { createdAt: "desc" } }),
-    prisma.order.findMany({ orderBy: { createdAt: "desc" } }),
     prisma.store.findFirst(),
   ]);
 

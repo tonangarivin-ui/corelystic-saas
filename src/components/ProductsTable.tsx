@@ -2,10 +2,20 @@
 
 import { useState } from "react";
 import { Search, ChevronDown, Plus } from "lucide-react";
-import { productsData, type Product } from "@/data/mock-analytics";
+import { productsData } from "@/data/mock-analytics";
 import AddProductModal from "./AddProductModal";
+import type { Product as PrismaProduct } from "@prisma/client";
 
 type StatusFilter = "All Status" | "In Stock" | "Low Stock" | "Out of Stock";
+
+interface TableProduct {
+  id: string | number;
+  name: string;
+  price: number;
+  stock: number;
+  revenue: number;
+  status: string;
+}
 
 const statusStyles: Record<string, string> = {
   "In Stock": "bg-emerald-50 text-emerald-700",
@@ -16,9 +26,9 @@ const statusStyles: Record<string, string> = {
 export default function ProductsTable({
   initialProducts,
 }: {
-  initialProducts?: any[];
+  initialProducts?: PrismaProduct[];
 }) {
-  const [items, setItems] = useState<any[]>(() => {
+  const [items] = useState<TableProduct[]>(() => {
     if (initialProducts && initialProducts.length > 0) {
       return initialProducts.map((p) => ({
         id: p.id,
@@ -58,7 +68,7 @@ export default function ProductsTable({
     }
   };
 
-  const toggleOne = (id: number) => {
+  const toggleOne = (id: string | number) => {
     const next = new Set(selected);
     if (next.has(id)) {
       next.delete(id);
