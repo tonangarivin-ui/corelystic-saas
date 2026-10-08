@@ -1,7 +1,6 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { ProductStatus } from "@prisma/client";
 
@@ -24,11 +23,6 @@ export async function createProductAction(data: {
   stock: number;
   status?: "IN_STOCK" | "LOW_STOCK" | "OUT_OF_STOCK";
 }) {
-  const session = await getSession();
-  if (!session) {
-    return { success: false, error: "Unauthorized" };
-  }
-
   try {
     let status: ProductStatus = ProductStatus.IN_STOCK;
     if (data.stock <= 0) {
@@ -51,6 +45,7 @@ export async function createProductAction(data: {
       },
     });
 
+    revalidatePath("/products");
     revalidatePath("/admin");
     revalidatePath("/");
     return { success: true, product };
@@ -63,22 +58,30 @@ export async function createProductAction(data: {
 export async function updateProductAction(
   id: string,
   data: {
+    name?: string;
+    category?: string;
     price?: number;
     stock?: number;
     status?: ProductStatus;
   }
 ) {
-  const session = await getSession();
-  if (!session) {
-    return { success: false, error: "Unauthorized" };
-  }
-
   try {
+    let status = data.status;
+    if (data.stock !== undefined) {
+      if (data.stock <= 0) status = ProductStatus.OUT_OF_STOCK;
+      else if (data.stock <= 50) status = ProductStatus.LOW_STOCK;
+      else status = ProductStatus.IN_STOCK;
+    }
+
     const product = await prisma.product.update({
       where: { id },
-      data,
+      data: {
+        ...data,
+        status,
+      },
     });
 
+    revalidatePath("/products");
     revalidatePath("/admin");
     revalidatePath("/");
     return { success: true, product };
@@ -89,16 +92,12 @@ export async function updateProductAction(
 }
 
 export async function deleteProductAction(id: string) {
-  const session = await getSession();
-  if (!session) {
-    return { success: false, error: "Unauthorized" };
-  }
-
   try {
     await prisma.product.delete({
       where: { id },
     });
 
+    revalidatePath("/products");
     revalidatePath("/admin");
     revalidatePath("/");
     return { success: true };
