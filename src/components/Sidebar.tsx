@@ -30,9 +30,9 @@ const mainNav = [
 ];
 
 const growthNav = [
-  { label: "Goals & Target", icon: Target, href: "#" },
-  { label: "Sales Performance", icon: BarChart2, href: "#" },
-  { label: "Marketing", icon: Megaphone, href: "#" },
+  { label: "Goals & Target", icon: Target, href: "/goals" },
+  { label: "Sales Performance", icon: BarChart2, href: "/analytics" },
+  { label: "Marketing", icon: Megaphone, href: "/marketing" },
 ];
 
 export default function Sidebar() {
@@ -96,17 +96,26 @@ export default function Sidebar() {
           {collapsed ? "..." : "Growth Tools"}
         </p>
         <ul className="space-y-0.5">
-          {growthNav.map((item) => (
-            <li key={item.label}>
-              <a
-                href="#"
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors ${collapsed ? "justify-center" : ""}`}
-              >
-                <item.icon className="w-[18px] h-[18px] flex-shrink-0" />
-                {!collapsed && <span>{item.label}</span>}
-              </a>
-            </li>
-          ))}
+          {growthNav.map((item) => {
+            const isActive =
+              item.href !== "#" && pathname.startsWith(item.href);
+
+            return (
+              <li key={item.label}>
+                <Link
+                  href={item.href}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-medium transition-colors ${
+                    isActive
+                      ? "bg-active-lavender text-active-lavender-text"
+                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+                  } ${collapsed ? "justify-center" : ""}`}
+                >
+                  <item.icon className="w-[18px] h-[18px] flex-shrink-0" />
+                  {!collapsed && <span>{item.label}</span>}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 

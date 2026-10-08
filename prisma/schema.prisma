@@ -57,6 +57,7 @@ model Store {
   orders       Order[]
   customers    Customer[]
   transactions Transaction[]
+  goals        Goal[]
 }
 
 model Product {
@@ -114,6 +115,20 @@ model Transaction {
   customerEmail String?
   description   String?
   createdAt     DateTime          @default(now())
+}
+
+model Goal {
+  id          String   @id @default(cuid())
+  storeId     String?
+  store       Store?   @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  title       String
+  category    String   @default("Revenue") // Revenue, Customers, Orders, Conversion
+  currentVal  Float
+  targetVal   Float
+  unit        String   @default("$") // "$", "users", "orders", "%"
+  deadline    DateTime
+  status      String   @default("ON_TRACK") // ON_TRACK, COMPLETED, BEHIND
+  createdAt   DateTime @default(now())
 }
 
 model MetricDaily {
