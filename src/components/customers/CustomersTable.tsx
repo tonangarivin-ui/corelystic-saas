@@ -204,7 +204,7 @@ export default function CustomersTable({
                   </td>
                   <td className="py-4 px-6">{getStatusBadge(c.status)}</td>
                   <td className="py-4 px-6 font-semibold text-slate-700">
-                    {c.ordersCount} orders
+                    {c.ordersCount} {c.ordersCount === 1 ? "order" : "orders"}
                   </td>
                   <td className="py-4 px-6 font-bold text-slate-900">
                     ${c.totalSpent.toFixed(2)}
