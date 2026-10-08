@@ -127,13 +127,17 @@ export default function Sidebar() {
           <HelpCircle className="w-[18px] h-[18px] flex-shrink-0" />
           {!collapsed && <span>Help Center</span>}
         </a>
-        <a
-          href="#"
-          className={`flex items-center gap-3 px-3 py-2 rounded-xl text-[14px] font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors ${collapsed ? "justify-center" : ""}`}
+        <Link
+          href="/settings"
+          className={`flex items-center gap-3 px-3 py-2 rounded-xl text-[14px] font-medium transition-colors ${
+            pathname === "/settings"
+              ? "bg-active-lavender text-active-lavender-text"
+              : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+          } ${collapsed ? "justify-center" : ""}`}
         >
           <Settings className="w-[18px] h-[18px] flex-shrink-0" />
           {!collapsed && <span>Settings</span>}
-        </a>
+        </Link>
 
         {!collapsed && (
           <div className="mt-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
