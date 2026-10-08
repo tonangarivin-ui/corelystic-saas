@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   LayoutGrid,
   Users,
@@ -20,20 +22,21 @@ import {
 } from "lucide-react";
 
 const mainNav = [
-  { label: "Dashboards", icon: LayoutGrid, active: true },
-  { label: "Customers", icon: Users },
-  { label: "Orders", icon: Package },
-  { label: "Products", icon: Tag },
-  { label: "Transactions", icon: CreditCard },
+  { label: "Dashboards", icon: LayoutGrid, href: "/" },
+  { label: "Customers", icon: Users, href: "/customers" },
+  { label: "Orders", icon: Package, href: "/orders" },
+  { label: "Products", icon: Tag, href: "/products" },
+  { label: "Transactions", icon: CreditCard, href: "/transactions" },
 ];
 
 const growthNav = [
-  { label: "Goals & Target", icon: Target },
-  { label: "Sales Performance", icon: BarChart2 },
-  { label: "Marketing", icon: Megaphone },
+  { label: "Goals & Target", icon: Target, href: "#" },
+  { label: "Sales Performance", icon: BarChart2, href: "#" },
+  { label: "Marketing", icon: Megaphone, href: "#" },
 ];
 
 export default function Sidebar() {
+  const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileExpanded, setProfileExpanded] = useState(true);
@@ -65,21 +68,28 @@ export default function Sidebar() {
           {collapsed ? "..." : "Main Navigation"}
         </p>
         <ul className="space-y-0.5">
-          {mainNav.map((item) => (
-            <li key={item.label}>
-              <a
-                href="#"
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-medium transition-colors ${
-                  item.active
-                    ? "bg-active-lavender text-active-lavender-text"
-                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
-                } ${collapsed ? "justify-center" : ""}`}
-              >
-                <item.icon className="w-[18px] h-[18px] flex-shrink-0" />
-                {!collapsed && <span>{item.label}</span>}
-              </a>
-            </li>
-          ))}
+          {mainNav.map((item) => {
+            const isActive =
+              item.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(item.href);
+
+            return (
+              <li key={item.label}>
+                <Link
+                  href={item.href}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-medium transition-colors ${
+                    isActive
+                      ? "bg-active-lavender text-active-lavender-text"
+                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+                  } ${collapsed ? "justify-center" : ""}`}
+                >
+                  <item.icon className="w-[18px] h-[18px] flex-shrink-0" />
+                  {!collapsed && <span>{item.label}</span>}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
         <p className={`text-[11px] font-medium text-slate-400 uppercase tracking-wider mt-6 mb-2 ${collapsed ? "text-center" : "px-2"}`}>

@@ -2,14 +2,18 @@
 
 import { Search, Bell, Download, LayoutGrid } from "lucide-react";
 
-export default function TopToolbar() {
+export default function TopToolbar({
+  breadcrumb = { parent: "Dashboards", current: "Data" },
+}: {
+  breadcrumb?: { parent: string; current: string };
+}) {
   return (
     <div className="flex items-center gap-4 px-6 py-4 border-b border-slate-100">
       <nav className="flex items-center gap-2 text-[13px]">
         <LayoutGrid className="w-4 h-4 text-slate-400" />
-        <span className="text-slate-400">Dashboards</span>
+        <span className="text-slate-400">{breadcrumb.parent}</span>
         <span className="text-slate-300">/</span>
-        <span className="text-slate-700 font-medium">Data</span>
+        <span className="text-slate-700 font-medium">{breadcrumb.current}</span>
       </nav>
 
       <div className="flex-1 flex justify-center">
