@@ -36,6 +36,19 @@ enum TransactionStatus {
   FAILED
 }
 
+enum CampaignStatus {
+  ACTIVE
+  SCHEDULED
+  PAUSED
+  COMPLETED
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+  FREE_SHIPPING
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -58,6 +71,7 @@ model Store {
   customers    Customer[]
   transactions Transaction[]
   goals        Goal[]
+  campaigns    Campaign[]
 }
 
 model Product {
@@ -129,6 +143,26 @@ model Goal {
   deadline    DateTime
   status      String   @default("ON_TRACK") // ON_TRACK, COMPLETED, BEHIND
   createdAt   DateTime @default(now())
+}
+
+model Campaign {
+  id           String         @id @default(cuid())
+  storeId      String?
+  store        Store?         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name         String
+  code         String         @unique
+  discountType DiscountType   @default(PERCENTAGE)
+  discountVal  Float          @default(15)
+  channel      String         @default("Email Newsletter")
+  budget       Float          @default(500)
+  spent        Float          @default(0)
+  clicks       Int            @default(0)
+  conversions  Int            @default(0)
+  revenue      Float          @default(0)
+  startDate    DateTime       @default(now())
+  endDate      DateTime?
+  status       CampaignStatus @default(ACTIVE)
+  createdAt    DateTime       @default(now())
 }
 
 model MetricDaily {
