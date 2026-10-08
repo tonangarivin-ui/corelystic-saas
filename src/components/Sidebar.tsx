@@ -143,17 +143,6 @@ export default function Sidebar() {
                 <ChevronDown className="w-4 h-4 text-slate-400 flex-shrink-0" />
               )}
             </button>
-            {profileExpanded && (
-              <div className="mt-2.5 pt-2 border-t border-slate-200/60 flex items-center justify-between">
-                <span className="text-[10px] uppercase font-bold text-slate-400">Control Panel</span>
-                <Link
-                  href="/admin"
-                  className="px-2 py-0.5 rounded-md bg-[#00C48C]/15 hover:bg-[#00C48C]/25 text-[#00A877] text-[11px] font-bold transition"
-                >
-                  Admin →
-                </Link>
-              </div>
-            )}
           </div>
         )}
       </div>

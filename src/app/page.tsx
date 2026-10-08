@@ -5,8 +5,18 @@ import KPICards from "@/components/KPICards";
 import OrdersAnalyticsChart from "@/components/OrdersAnalyticsChart";
 import TopSalesPanel from "@/components/TopSalesPanel";
 import ProductsTable from "@/components/ProductsTable";
+import { prisma } from "@/lib/prisma";
 
-export default function Home() {
+export default async function Home() {
+  let initialProducts: any[] = [];
+  try {
+    initialProducts = await prisma.product.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+  } catch (error) {
+    console.error("Failed to fetch products for storefront:", error);
+  }
+
   return (
     <div className="flex min-h-screen">
       <Sidebar />
@@ -28,7 +38,7 @@ export default function Home() {
             </div>
 
             <div className="mt-5">
-              <ProductsTable />
+              <ProductsTable initialProducts={initialProducts} />
             </div>
           </main>
         </div>

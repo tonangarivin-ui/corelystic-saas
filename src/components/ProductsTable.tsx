@@ -13,14 +13,36 @@ const statusStyles: Record<string, string> = {
   "Out of Stock": "bg-red-50 text-red-700",
 };
 
-export default function ProductsTable() {
+export default function ProductsTable({
+  initialProducts,
+}: {
+  initialProducts?: any[];
+}) {
+  const [items, setItems] = useState<any[]>(() => {
+    if (initialProducts && initialProducts.length > 0) {
+      return initialProducts.map((p) => ({
+        id: p.id,
+        name: p.name,
+        price: p.price,
+        stock: p.stock,
+        revenue: p.revenue,
+        status:
+          p.status === "IN_STOCK"
+            ? "In Stock"
+            : p.status === "LOW_STOCK"
+            ? "Low Stock"
+            : "Out of Stock",
+      }));
+    }
+    return productsData;
+  });
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All Status");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [selected, setSelected] = useState<Set<string | number>>(new Set());
   const [modalOpen, setModalOpen] = useState(false);
 
-  const filtered = productsData.filter((p) => {
+  const filtered = items.filter((p) => {
     const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = statusFilter === "All Status" || p.status === statusFilter;
     return matchesSearch && matchesStatus;
