@@ -1,0 +1,81 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+}
+
+enum ProductStatus {
+  IN_STOCK
+  LOW_STOCK
+  OUT_OF_STOCK
+}
+
+enum OrderStatus {
+  COMPLETED
+  PENDING
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(ADMIN)
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Store {
+  id        String    @id @default(cuid())
+  name      String    @default("Corelytic Store")
+  slug      String    @unique @default("corelytic-store")
+  currency  String    @default("USD")
+  createdAt DateTime  @default(now())
+  products  Product[]
+  orders    Order[]
+}
+
+model Product {
+  id        String        @id @default(cuid())
+  storeId   String?
+  store     Store?        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name      String
+  category  String        @default("General")
+  price     Float
+  stock     Int
+  revenue   Float         @default(0)
+  status    ProductStatus @default(IN_STOCK)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model Order {
+  id           String      @id @default(cuid())
+  storeId      String?
+  store        Store?      @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orderNumber  String      @unique
+  customerName String
+  total        Float
+  status       OrderStatus @default(COMPLETED)
+  createdAt    DateTime    @default(now())
+}
+
+model MetricDaily {
+  id        String   @id @default(cuid())
+  month     String
+  order     Int      @default(0)
+  income    Float
+  expense   Float
+  year      Int      @default(2026)
+  createdAt DateTime @default(now())
+}
